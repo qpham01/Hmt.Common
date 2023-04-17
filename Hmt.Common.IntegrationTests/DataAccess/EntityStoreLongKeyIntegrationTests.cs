@@ -3,7 +3,7 @@ using Hmt.Common.DataAccess.Interfaces;
 using Hmt.Common.DataAccess.Database;
 using Marten;
 
-namespace Hmt.Common.DataAccess.IntegrationTests;
+namespace Hmt.Common.IntegrationTests.DataAccess;
 
 public class TestEntityLong : IEntity<long>, ISoftDeletable
 {
@@ -17,15 +17,14 @@ public class EntityStoreLongKeyIntegrationTests
     private IEntityStore<TestEntityLong, long> _sut;
     private IDocumentStore _store;
     private IDocumentStoreWrapper _storeWrapper;
-    private const string _connectionString =
-        "host=localhost;database=hmtech;password=C3i?chJj&sU4;username=hmtech_dev";
+    private const string _connectionString = "host=localhost;database=hmtech;password=C3i?chJj&sU4;username=hmtech_dev";
 
     private TestEntityLong _testEntity1;
     private TestEntityLong _testEntity2;
     private TestEntityLong _testEntity3;
 
-    [SetUp]
-    public async Task Setup()
+    [OneTimeSetUp]
+    public async Task OneTimeSetup()
     {
         _store = DocumentStore.For(_connectionString);
         _storeWrapper = new DocumentStoreWrapper(_store);
@@ -38,19 +37,19 @@ public class EntityStoreLongKeyIntegrationTests
         await _sut.CreateAsync(_testEntity3);
     }
 
-    [TearDown]
-    public async Task Teardown()
+    [OneTimeTearDown]
+    public async Task OneTimeTeardown()
     {
         await _sut.DeleteAsync(_testEntity1);
         await _sut.DeleteAsync(_testEntity2);
         await _sut.DeleteAsync(_testEntity3);
-        var allEntities = await _sut.GetAllAsync();
+        var allEntities = await _sut.ReadAllAsync();
         allEntities.Count().Should().Be(0);
         _store.Dispose();
     }
 
     [Test]
-    public async Task Guid_sut_CRUD_Operations_Should_Work_Correctly()
+    public async Task EntityStoreLongKey_CRUD_Operations_Should_Work_Correctly()
     {
         // Arrange
         var testEntity = new TestEntityLong { Name = "Test Entity" };
@@ -78,9 +77,7 @@ public class EntityStoreLongKeyIntegrationTests
         // Assert - Update
         using (var session = _storeWrapper.OpenSession())
         {
-            var updatedEntity = await session
-                .Query<TestEntityLong>()
-                .FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var updatedEntity = await session.Query<TestEntityLong>().FirstOrDefaultAsync(x => x.Id == testEntity.Id);
             updatedEntity.Should().NotBeNull();
             updatedEntity!.Name.Should().Be("Updated Test Entity");
         }
@@ -104,18 +101,16 @@ public class EntityStoreLongKeyIntegrationTests
         // Assert - Delete
         using (var session = _storeWrapper.OpenSession())
         {
-            var deletedEntity = await session
-                .Query<TestEntityLong>()
-                .FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var deletedEntity = await session.Query<TestEntityLong>().FirstOrDefaultAsync(x => x.Id == testEntity.Id);
             deletedEntity.Should().BeNull();
         }
     }
 
     [Test]
-    public async Task Guid_sut_GetAll_Operation_Should_Work_Correctly()
+    public async Task EntityStoreLongKey_ReadAll_Operation_Should_Work_Correctly()
     {
         // Act
-        var allEntities = await _sut.GetAllAsync();
+        var allEntities = await _sut.ReadAllAsync();
 
         // Assert
         allEntities.Should().NotBeEmpty();
@@ -123,11 +118,11 @@ public class EntityStoreLongKeyIntegrationTests
     }
 
     [Test]
-    public async Task Guid_sut_GetPage_Operation_Should_Work_Correctly()
+    public async Task EntityStoreLongKey_ReadPage_Operation_Should_Work_Correctly()
     {
         // Act
-        var firstPageEntities = await _sut.GetPageAsync(0, 2);
-        var secondPageEntities = await _sut.GetPageAsync(2, 2);
+        var firstPageEntities = await _sut.ReadPageAsync(0, 2);
+        var secondPageEntities = await _sut.ReadPageAsync(2, 2);
 
         // Assert
         firstPageEntities.Should().NotBeEmpty().And.HaveCount(2);

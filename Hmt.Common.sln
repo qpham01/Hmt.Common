@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hmt.Common.DataAccess", "Hmt.Common.DataAccess\Hmt.Common.DataAccess.csproj", "{517BE7FD-9C02-4E21-BFAF-5F2FAF828B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hmt.Common.DataAccess", "Hmt.Common.DataAccess\Hmt.Common.DataAccess.csproj", "{517BE7FD-9C02-4E21-BFAF-5F2FAF828B8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hmt.Common.DataAccess.IntegrationTests", "Hmt.Common.DataAccess.IntegrationTests\Hmt.Common.DataAccess.IntegrationTests.csproj", "{0BDA8951-661A-4AC2-9DD4-0447A7F30E0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hmt.Common.IntegrationTests", "Hmt.Common.IntegrationTests\Hmt.Common.IntegrationTests.csproj", "{6A8E1206-CD30-4F6E-A194-13CCB1C6EEED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hmt.Common.UnitTests", "Hmt.Common.UnitTests\Hmt.Common.UnitTests.csproj", "{9E14EDD3-3048-4482-8EA6-A3DF1E34C3F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,14 @@ Global
 		{517BE7FD-9C02-4E21-BFAF-5F2FAF828B8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{517BE7FD-9C02-4E21-BFAF-5F2FAF828B8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{517BE7FD-9C02-4E21-BFAF-5F2FAF828B8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BDA8951-661A-4AC2-9DD4-0447A7F30E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BDA8951-661A-4AC2-9DD4-0447A7F30E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BDA8951-661A-4AC2-9DD4-0447A7F30E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BDA8951-661A-4AC2-9DD4-0447A7F30E0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A8E1206-CD30-4F6E-A194-13CCB1C6EEED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A8E1206-CD30-4F6E-A194-13CCB1C6EEED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A8E1206-CD30-4F6E-A194-13CCB1C6EEED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A8E1206-CD30-4F6E-A194-13CCB1C6EEED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E14EDD3-3048-4482-8EA6-A3DF1E34C3F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E14EDD3-3048-4482-8EA6-A3DF1E34C3F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E14EDD3-3048-4482-8EA6-A3DF1E34C3F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E14EDD3-3048-4482-8EA6-A3DF1E34C3F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

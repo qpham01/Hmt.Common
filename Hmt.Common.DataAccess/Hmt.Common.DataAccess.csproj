@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Database\DocumentStoreWrapperGuid.cs" />
+    <Compile Remove="Database\DocumentStoreWrapperLong.cs" />
+    <Compile Remove="Database\SessionWrapperGuid.cs" />
+    <Compile Remove="Database\SessionWrapperLong.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Marten" Version="5.11.0" />
   </ItemGroup>
 

@@ -3,8 +3,7 @@ using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class EntityStoreGuidKey<T> : EntityStoreAbstract<T, Guid>
-    where T : class, IEntity<Guid>, ISoftDeletable
+public class EntityStoreGuidKey<T> : EntityStoreAbstract<T, Guid> where T : class, IEntity<Guid>, ISoftDeletable
 {
     public EntityStoreGuidKey(IDocumentStoreWrapper storeWrapper) : base(storeWrapper) { }
 
@@ -14,10 +13,8 @@ public class EntityStoreGuidKey<T> : EntityStoreAbstract<T, Guid>
         {
             if (session == null)
                 throw new InvalidOperationException("Session is null");
-            return await session
-                .Query<T>()
-                .Where(x => !x.IsDeleted && x.Id.Equals(id))
-                .SingleAsync();
+            var query = session.Query<T>().Where(x => !x.IsDeleted && x.Id.Equals(id));
+            return await query.SingleAsync();
         }
     }
 
@@ -32,16 +29,6 @@ public class EntityStoreGuidKey<T> : EntityStoreAbstract<T, Guid>
         {
             session.Events.Append(id, @event);
             await session.SaveChangesAsync();
-        }
-    }
-
-    public override async Task DeleteAsync(T entity)
-    {
-        using (var session = _storeWrapper.OpenSession())
-        {
-            if (session == null)
-                throw new InvalidOperationException("Session is null");
-            await session.DeleteAsync(entity);
         }
     }
 }

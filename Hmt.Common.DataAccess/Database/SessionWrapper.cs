@@ -12,31 +12,42 @@ public class SessionWrapper : ISessionWrapper
         _session = session;
     }
 
-    public IQueryable<T> Query<T>()
-    {
-        return _session.Query<T>();
-    }
-
-    public void Store<T, TKey>(T entity) where T : IEntity<TKey>
-    {
-        _session.Store(entity);
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        await _session.SaveChangesAsync();
-    }
-
     public void Dispose()
     {
         _session.Dispose();
     }
 
-    public async Task DeleteAsync<T>(T entity)
+    public IQueryable<T> Query<T>()
+    {
+        return _session.Query<T>();
+    }
+
+    public async Task<IReadOnlyList<T>> QueryAll<T>() where T : ISoftDeletable
+    {
+        return await _session.Query<T>().Where(x => !x.IsDeleted).ToListAsync();
+    }
+
+    public async Task<T?> QuerySingleById<T, TKey>(Guid id) where T : IEntity<TKey>, ISoftDeletable
+    {
+        return await Query<T>().Where(x => !x.IsDeleted && x.Id!.Equals(id)).SingleAsync();
+    }
+
+    public async Task Store<T, TKey>(T entity) where T : IEntity<TKey>
+    {
+        _session.Store(entity);
+        await _session.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync<T, TKey>(T entity) where T : IEntity<TKey>
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
         _session.Delete(entity);
+        await _session.SaveChangesAsync();
+    }
+
+    public async Task SaveChangesAsync()
+    {
         await _session.SaveChangesAsync();
     }
 

@@ -9,7 +9,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     protected readonly IDocumentStoreWrapper _storeWrapper;
 
     public abstract Task<T?> ReadAsync(TKey id);
-    public abstract Task DeleteAsync(T entity);
+
     public abstract Task ApplyEventAsync(TKey id, object @event);
 
     public EntityStoreAbstract(IDocumentStoreWrapper storeWrapper)
@@ -21,8 +21,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            session.Store<T, TKey>(entity);
-            await session.SaveChangesAsync();
+            await session.Store<T, TKey>(entity);
         }
         return entity;
     }
@@ -31,8 +30,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            session.Store<T, TKey>(entity);
-            await session.SaveChangesAsync();
+            await session.Store<T, TKey>(entity);
         }
     }
 
@@ -47,30 +45,34 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                session.Store<T, TKey>(entity);
-                await session.SaveChangesAsync();
+                await session.Store<T, TKey>(entity);
             }
         }
     }
 
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IReadOnlyList<T>> ReadAllAsync()
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            return await session.Query<T>().Where(x => !x.IsDeleted).ToListAsync();
+            return await session.QueryAll<T>();
         }
     }
 
-    public virtual async Task<IEnumerable<T>> GetPageAsync(int startIndex, int count)
+    public virtual async Task<IReadOnlyList<T>> ReadPageAsync(int startIndex, int count)
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            return await session
-                .Query<T>()
-                .Where(x => !x.IsDeleted)
-                .Skip(startIndex)
-                .Take(count)
-                .ToListAsync();
+            return await session.Query<T>().Where(x => !x.IsDeleted).Skip(startIndex).Take(count).ToListAsync();
+        }
+    }
+
+    public virtual async Task DeleteAsync(T entity)
+    {
+        using (var session = _storeWrapper.OpenSession())
+        {
+            if (session == null)
+                throw new InvalidOperationException("Session is null");
+            await session.DeleteAsync<T, TKey>(entity);
         }
     }
 }
