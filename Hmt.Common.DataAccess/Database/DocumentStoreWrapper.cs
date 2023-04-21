@@ -7,9 +7,9 @@ public class DocumentStoreWrapper : IDocumentStoreWrapper
 {
     private readonly IDocumentStore _store;
 
-    public DocumentStoreWrapper(IDocumentStoreProvider storeProvider)
+    public DocumentStoreWrapper(IDocumentStoreProvider storeProvider, ISchema schema)
     {
-        _store = storeProvider.MakeStore();
+        _store = storeProvider.MakeStore(schema.Name);
     }
 
     public ISessionWrapper OpenSession()

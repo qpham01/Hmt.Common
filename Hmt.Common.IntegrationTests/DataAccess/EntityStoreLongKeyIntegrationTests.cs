@@ -15,9 +15,8 @@ public class TestEntityLong : IEntity<long>, ISoftDeletable
 public class EntityStoreLongKeyIntegrationTests
 {
     private IEntityStore<TestEntityLong, long> _sut;
-    private IDocumentStore _store;
+    private IDocumentStore? _store;
     private IDocumentStoreWrapper _storeWrapper;
-    private const string _connectionString = "host=localhost;database=hmtech;password=C3i?chJj&sU4;username=hmtech_dev";
 
     private TestEntityLong _testEntity1;
     private TestEntityLong _testEntity2;
@@ -26,7 +25,7 @@ public class EntityStoreLongKeyIntegrationTests
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider());
+        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider(), new TestSchema { Name = "public" });
         _sut = new EntityStoreLongKey<TestEntityLong>(_storeWrapper);
         _testEntity1 = new TestEntityLong { Name = "Test Entity 1" };
         _testEntity2 = new TestEntityLong { Name = "Test Entity 2" };
@@ -44,7 +43,7 @@ public class EntityStoreLongKeyIntegrationTests
         await _sut.DeleteAsync(_testEntity3);
         var allEntities = await _sut.ReadAllAsync();
         allEntities.Count().Should().Be(0);
-        _store.Dispose();
+        _store!.Dispose();
     }
 
     [Test]

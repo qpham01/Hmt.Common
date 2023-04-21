@@ -5,6 +5,11 @@ using Marten;
 
 namespace Hmt.Common.IntegrationTests.DataAccess;
 
+public class TestSchema : IHasName
+{
+    public string Name { get; set; } = string.Empty;
+}
+
 public class TestEntityGuid : IEntity<Guid>, ISoftDeletable
 {
     public Guid Id { get; set; }
@@ -15,7 +20,7 @@ public class TestEntityGuid : IEntity<Guid>, ISoftDeletable
 public class EntityStoreGuidKeyIntegrationTests
 {
     private IEntityStore<TestEntityGuid, Guid> _sut;
-    private IDocumentStore _store;
+    private IDocumentStore? _store;
     private IDocumentStoreWrapper _storeWrapper;
 
     private TestEntityGuid _testEntity1;
@@ -25,7 +30,7 @@ public class EntityStoreGuidKeyIntegrationTests
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider());
+        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider(), new TestSchema { Name = "public" });
         _sut = new EntityStoreGuidKey<TestEntityGuid>(_storeWrapper);
         _testEntity1 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 1" };
         _testEntity2 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 2" };
@@ -43,7 +48,7 @@ public class EntityStoreGuidKeyIntegrationTests
         await _sut.DeleteAsync(_testEntity3);
         var allEntities = await _sut.ReadAllAsync();
         allEntities.Count().Should().Be(0);
-        _store.Dispose();
+        _store!.Dispose();
     }
 
     [Test]

@@ -7,9 +7,9 @@ public class NamedEntityStoreWrapper<T> : INamedEntityStoreWrapper<T> where T : 
 {
     IDocumentStore _store;
 
-    public NamedEntityStoreWrapper(INamedEntityStoreProvider<T> storeProvider)
+    public NamedEntityStoreWrapper(INamedEntityStoreProvider<T> storeProvider, ISchema schema)
     {
-        _store = storeProvider.MakeStore();
+        _store = storeProvider.MakeStore(schema.Name);
     }
 
     public ISessionWrapper OpenSession()
