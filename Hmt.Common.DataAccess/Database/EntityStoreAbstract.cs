@@ -66,6 +66,11 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
         }
     }
 
+    public virtual ISessionWrapper GetSession()
+    {
+        return _storeWrapper.OpenSession();
+    }
+
     public virtual async Task DeleteAsync(T entity)
     {
         using (var session = _storeWrapper.OpenSession())

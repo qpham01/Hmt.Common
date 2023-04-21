@@ -26,8 +26,7 @@ public class EntityStoreLongKeyIntegrationTests
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        _store = DocumentStore.For(_connectionString);
-        _storeWrapper = new DocumentStoreWrapper(_store);
+        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider());
         _sut = new EntityStoreLongKey<TestEntityLong>(_storeWrapper);
         _testEntity1 = new TestEntityLong { Name = "Test Entity 1" };
         _testEntity2 = new TestEntityLong { Name = "Test Entity 2" };

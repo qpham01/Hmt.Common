@@ -17,7 +17,6 @@ public class EntityStoreGuidKeyIntegrationTests
     private IEntityStore<TestEntityGuid, Guid> _sut;
     private IDocumentStore _store;
     private IDocumentStoreWrapper _storeWrapper;
-    private const string _connectionString = "host=localhost;database=hmtech;password=C3i?chJj&sU4;username=hmtech_dev";
 
     private TestEntityGuid _testEntity1;
     private TestEntityGuid _testEntity2;
@@ -26,8 +25,7 @@ public class EntityStoreGuidKeyIntegrationTests
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        _store = DocumentStore.For(_connectionString);
-        _storeWrapper = new DocumentStoreWrapper(_store);
+        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider());
         _sut = new EntityStoreGuidKey<TestEntityGuid>(_storeWrapper);
         _testEntity1 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 1" };
         _testEntity2 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 2" };
