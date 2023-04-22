@@ -3,7 +3,7 @@ using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class NamedEntityStoreWrapper<T> : INamedEntityStoreWrapper<T> where T : IHasName
+public class NamedEntityStoreWrapper<T> : INamedEntityStoreWrapper<T> where T : IHasName, ISoftDeletable
 {
     IDocumentStore _store;
 

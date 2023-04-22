@@ -1,10 +1,11 @@
 ﻿using Hmt.Common.DataAccess.Interfaces;
 using Marten;
+using Marten.Linq.SoftDeletes;
 using Marten.Schema;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class NamedEntityStoreProvider<T> : INamedEntityStoreProvider<T> where T : IHasName
+public class NamedEntityStoreProvider<T> : INamedEntityStoreProvider<T> where T : IHasName, ISoftDeletable
 {
     private readonly string _connectionString =
         "host=localhost;database=hmtech;password=C3i?chJj&sU4;username=hmtech_dev";
@@ -24,6 +25,14 @@ public class NamedEntityStoreProvider<T> : INamedEntityStoreProvider<T> where T 
                         x.Casing = ComputedIndex.Casings.Lower;
                         x.Name = $"idx_{typeof(T).Name}_name";
                         x.IsUnique = true;
+                        x.IsConcurrent = true;
+                    }
+                )
+                .Index(
+                    x => x.IsDeleted,
+                    x =>
+                    {
+                        x.Name = $"idx_{typeof(T).Name}_isdeleted";
                         x.IsConcurrent = true;
                     }
                 );
