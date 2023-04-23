@@ -5,7 +5,7 @@ using Marten;
 
 namespace Hmt.Common.IntegrationTests.DataAccess;
 
-public class TestSchema : IHasName
+public class TestSchema : ISchema
 {
     public string Name { get; set; } = string.Empty;
 }
