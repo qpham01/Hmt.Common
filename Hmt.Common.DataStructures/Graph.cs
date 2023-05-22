@@ -2,11 +2,11 @@
 
 public class Edge
 {
-    public Node From { get; }
-    public Node To { get; }
+    public IGraphNode From { get; }
+    public IGraphNode To { get; }
     public double Weight { get; }
 
-    public Edge(Node from, Node to, double weight)
+    public Edge(IGraphNode from, IGraphNode to, double weight)
     {
         From = from;
         To = to;
@@ -14,33 +14,30 @@ public class Edge
     }
 }
 
-public class Node
+public class Node : IGraphNode
 {
-    public string Name { get; set; }
-    public bool Blocked { get; set; }
-    public List<Edge> Edges { get; set; } = new List<Edge>();
+    public virtual string Name { get; set; } = string.Empty;
+
+    public virtual bool Blocked { get; set; } = false;
+
+    protected List<Edge> _edges = new();
+    public Edge[] Edges => _edges.ToArray();
 
     public void AddEdge(Node to, double distance, bool bidirectional)
     {
-        Edges.Add(new Edge(this, to, distance));
+        _edges.Add(new Edge(this, to, distance));
         if (bidirectional)
             to.AddEdge(this, distance, false);
-    }
-
-    public Node(string name)
-    {
-        Name = name;
-        Blocked = false;
     }
 }
 
 public class Path
 {
-    public Node StartNode { get; }
-    public Node EndNode { get; }
+    public IGraphNode StartNode { get; }
+    public IGraphNode EndNode { get; }
     public List<Edge> Edges { get; }
 
-    public Path(Node startNode, Node endNode, List<Edge> edges)
+    public Path(IGraphNode startNode, IGraphNode endNode, List<Edge> edges)
     {
         StartNode = startNode;
         EndNode = endNode;
@@ -48,28 +45,28 @@ public class Path
     }
 }
 
-public class Graph
+public class Graph<N> where N : class, IGraphNode
 {
-    public List<Node> Nodes { get; set; }
+    public List<N> Nodes { get; set; }
 
     public Graph()
     {
-        Nodes = new List<Node>();
+        Nodes = new List<N>();
     }
 
-    public List<Path> FindAllPaths(Node start, Node end)
+    public List<Path> FindAllPaths(N start, N end)
     {
         List<Path> result = new List<Path>();
-        FindPathsDFS(start, end, null, new List<Edge>(), new HashSet<Node>() { start }, result);
+        FindPathsDFS(start, end, null, new List<Edge>(), new HashSet<N>() { start }, result);
         return result;
     }
 
     private void FindPathsDFS(
-        Node current,
-        Node end,
-        Node? previous,
+        N current,
+        N end,
+        N? previous,
         List<Edge> currentPath,
-        HashSet<Node> searched,
+        HashSet<N> searched,
         List<Path> result
     )
     {
@@ -77,7 +74,7 @@ public class Graph
         var searchEdges = current.Edges.Where(e => e.To != previous && !e.To.Blocked);
         foreach (var edge in searchEdges)
         {
-            var to = edge.To;
+            var to = edge.To as N;
             if (searched.Contains(to))
                 continue;
             if (to.Blocked)

@@ -2,29 +2,39 @@ namespace Hmt.Common.DataStructures.UnitTests;
 
 public class GraphTests
 {
-    private Graph _graph;
-    private Node _safeHouse;
-    private Node _pontLeveque;
-    private Node _pontDuNord;
-    private Node _poorDistrict;
-    private Node _blackMarket;
-    private Node _grocer;
-    private Node _doctor;
+    class TestNode : Node
+    {
+        public TestNode(string name)
+        {
+            Name = name;
+        }
+    }
+
+    private TestGraph _graph;
+    private TestNode _safeHouse;
+    private TestNode _pontLeveque;
+    private TestNode _pontDuNord;
+    private TestNode _poorDistrict;
+    private TestNode _blackMarket;
+    private TestNode _grocer;
+    private TestNode _doctor;
+
+    class TestGraph : Graph<TestNode> { }
 
     [SetUp]
     public void SetUp()
     {
         // create nodes
-        _pontLeveque = new Node("Pont Leveque");
-        _poorDistrict = new Node("Poor District");
-        _pontDuNord = new Node("Pont Du Nord");
-        _blackMarket = new Node("Black Market");
-        _grocer = new Node("Grocer");
-        _safeHouse = new Node("Safe House");
-        _doctor = new Node("Doctor");
+        _pontLeveque = new TestNode("Pont Leveque");
+        _poorDistrict = new TestNode("Poor District");
+        _pontDuNord = new TestNode("Pont Du Nord");
+        _blackMarket = new TestNode("Black Market");
+        _grocer = new TestNode("Grocer");
+        _safeHouse = new TestNode("Safe House");
+        _doctor = new TestNode("Doctor");
 
         // create graph and add nodes
-        _graph = new Graph();
+        _graph = new TestGraph();
         _graph.Nodes.AddRange(new[] { _safeHouse, _pontLeveque, _poorDistrict, _pontDuNord, _blackMarket, _grocer });
         AddEdgesInALine();
     }
