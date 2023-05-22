@@ -1,4 +1,6 @@
-﻿namespace Hmt.Common.DataStructures;
+﻿using Hmt.Common.Core.Interfaces;
+
+namespace Hmt.Common.Core.DataStructures;
 
 public class Edge
 {
@@ -68,6 +70,8 @@ public class Graph<N> where N : class, IGraphNode
         foreach (var edge in searchEdges)
         {
             var to = edge.To as N;
+            if (to == null)
+                continue;
             if (searched.Contains(to))
                 continue;
             if (to.Blocked)

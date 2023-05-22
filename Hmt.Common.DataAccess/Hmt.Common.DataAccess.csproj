@@ -17,4 +17,8 @@
     <PackageReference Include="Marten" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hmt.Common.Core\Hmt.Common.Core.csproj" />
+  </ItemGroup>
+
 </Project>

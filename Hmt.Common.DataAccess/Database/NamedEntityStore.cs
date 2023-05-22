@@ -1,10 +1,11 @@
-﻿using Hmt.Common.DataAccess.Interfaces;
+﻿using Hmt.Common.Core.Interfaces;
+using Hmt.Common.DataAccess.Interfaces;
 using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
 public class NamedEntityStore<T> : EntityStoreGuidKey<T>, INamedEntityStore<T>
-    where T : class, IEntity<Guid>, ISoftDeletable, IHasName
+    where T : class, IEntity<Guid>, ISoftDeletable, IHasName, IDisposable
 {
     public NamedEntityStore(INamedEntityStoreWrapper<T> storeWrapper) : base(storeWrapper) { }
 

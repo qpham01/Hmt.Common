@@ -20,7 +20,6 @@ public class TestEntityGuid : IEntity<Guid>, ISoftDeletable
 public class EntityStoreGuidKeyIntegrationTests
 {
     private IEntityStore<TestEntityGuid, Guid> _sut;
-    private IDocumentStore? _store;
     private IDocumentStoreWrapper _storeWrapper;
 
     private TestEntityGuid _testEntity1;
@@ -48,7 +47,6 @@ public class EntityStoreGuidKeyIntegrationTests
         await _sut.DeleteAsync(_testEntity3);
         var allEntities = await _sut.ReadAllAsync();
         allEntities.Count().Should().Be(0);
-        _store!.Dispose();
     }
 
     [Test]

@@ -1,4 +1,6 @@
-namespace Hmt.Common.DataStructures.UnitTests;
+using Hmt.Common.Core.DataStructures;
+
+namespace Hmt.Common.UnitTests.Core.DataStructures;
 
 public class GraphTests
 {

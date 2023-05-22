@@ -1,4 +1,6 @@
-﻿namespace Hmt.Common.DataStructures;
+﻿using Hmt.Common.Core.DataStructures;
+
+namespace Hmt.Common.Core.Interfaces;
 
 public interface IGraphNode
 {

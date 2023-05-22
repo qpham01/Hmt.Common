@@ -1,4 +1,6 @@
-﻿namespace Hmt.Common.DataAccess.Interfaces;
+﻿using Hmt.Common.Core.Interfaces;
+
+namespace Hmt.Common.DataAccess.Interfaces;
 
 public interface INamedEntityStore<T> : IEntityStore<T, Guid> where T : class, IEntity<Guid>, ISoftDeletable, IHasName
 {

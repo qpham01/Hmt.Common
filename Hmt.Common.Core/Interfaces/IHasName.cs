@@ -1,4 +1,4 @@
-﻿namespace Hmt.Common.DataAccess.Interfaces;
+﻿namespace Hmt.Common.Core.Interfaces;
 
 public interface IHasName
 {

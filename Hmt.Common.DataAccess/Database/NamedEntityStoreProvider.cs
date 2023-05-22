@@ -1,4 +1,5 @@
-﻿using Hmt.Common.DataAccess.Interfaces;
+﻿using Hmt.Common.Core.Interfaces;
+using Hmt.Common.DataAccess.Interfaces;
 using Marten;
 using Marten.Schema;
 

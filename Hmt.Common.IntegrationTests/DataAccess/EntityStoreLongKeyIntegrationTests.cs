@@ -5,17 +5,18 @@ using Marten;
 
 namespace Hmt.Common.IntegrationTests.DataAccess;
 
-public class TestEntityLong : IEntity<long>, ISoftDeletable
+public class TestEntityLong : IEntity<long>, ISoftDeletable, IDisposable
 {
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
+
+    public void Dispose() { }
 }
 
 public class EntityStoreLongKeyIntegrationTests
 {
     private IEntityStore<TestEntityLong, long> _sut;
-    private IDocumentStore? _store;
     private IDocumentStoreWrapper _storeWrapper;
 
     private TestEntityLong _testEntity1;
@@ -43,7 +44,6 @@ public class EntityStoreLongKeyIntegrationTests
         await _sut.DeleteAsync(_testEntity3);
         var allEntities = await _sut.ReadAllAsync();
         allEntities.Count().Should().Be(0);
-        _store!.Dispose();
     }
 
     [Test]

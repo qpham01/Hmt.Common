@@ -14,6 +14,6 @@ public class DocumentStoreWrapper : IDocumentStoreWrapper
 
     public ISessionWrapper OpenSession()
     {
-        return new SessionWrapper(_store.OpenSession());
+        return new SessionWrapper(_store.LightweightSession());
     }
 }

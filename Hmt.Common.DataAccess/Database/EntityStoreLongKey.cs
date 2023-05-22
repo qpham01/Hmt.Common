@@ -3,7 +3,8 @@ using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class EntityStoreLongKey<T> : EntityStoreAbstract<T, long> where T : class, IEntity<long>, ISoftDeletable
+public class EntityStoreLongKey<T> : EntityStoreAbstract<T, long>
+    where T : class, IEntity<long>, ISoftDeletable, IDisposable
 {
     public EntityStoreLongKey(IDocumentStoreWrapper storeWrapper) : base(storeWrapper) { }
 
