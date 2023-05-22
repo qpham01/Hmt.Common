@@ -57,21 +57,14 @@ public class Graph<N> where N : class, IGraphNode
     public List<Path> FindAllPaths(N start, N end)
     {
         List<Path> result = new List<Path>();
-        FindPathsDFS(start, end, null, new List<Edge>(), new HashSet<N>() { start }, result);
+        FindPathsDFS(start, end, new List<Edge>(), new HashSet<N>() { start }, result);
         return result;
     }
 
-    private void FindPathsDFS(
-        N current,
-        N end,
-        N? previous,
-        List<Edge> currentPath,
-        HashSet<N> searched,
-        List<Path> result
-    )
+    private void FindPathsDFS(N current, N end, List<Edge> currentPath, HashSet<N> searched, List<Path> result)
     {
         // Explore all possible paths from current node
-        var searchEdges = current.Edges.Where(e => e.To != previous && !e.To.Blocked);
+        var searchEdges = current.Edges.Where(e => !e.To.Blocked);
         foreach (var edge in searchEdges)
         {
             var to = edge.To as N;
@@ -89,7 +82,7 @@ public class Graph<N> where N : class, IGraphNode
                 continue;
             }
             searched.Add(to);
-            FindPathsDFS(to, end, current, currentPath, searched, result);
+            FindPathsDFS(to, end, currentPath, searched, result);
             currentPath.Remove(edge); // Remove edge from current path for backtracking
             searched.Remove(to);
         }
