@@ -1,6 +1,5 @@
 ﻿using Hmt.Common.DataAccess.Interfaces;
 using Marten;
-using Marten.Linq.SoftDeletes;
 using Marten.Schema;
 
 namespace Hmt.Common.DataAccess.Database;
