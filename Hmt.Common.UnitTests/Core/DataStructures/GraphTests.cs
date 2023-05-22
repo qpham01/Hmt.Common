@@ -75,7 +75,7 @@ public class GraphTests
     [TestCase("Pont Leveque", "Safe House", null, 3)]
     [TestCase("Pont Leveque", "Safe House", "Black Market", 1)]
     [TestCase("Pont Leveque", "Safe House", "Poor District", 1)]
-    public void FindAllPaths_Compplex_Paths(string startName, string endName, string? blockedName, int pathCount)
+    public void FindAllPaths_Complex_Paths(string startName, string endName, string? blockedName, int pathCount)
     {
         AddAdditionalEdges();
         var start = _graph.Nodes.FirstOrDefault(n => n.Name == startName);

@@ -2,9 +2,8 @@
 
 namespace Hmt.Common.Core.Interfaces;
 
-public interface IGraphNode
+public interface IGraphNode : IHasName
 {
-    string Name { get; }
     bool Blocked { get; }
     Edge[] Edges { get; }
 }
