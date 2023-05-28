@@ -56,6 +56,11 @@ public class Graph<N> where N : class, IGraphNode
         Nodes = new List<N>();
     }
 
+    public N? GetNodeByName(string name)
+    {
+        return Nodes.FirstOrDefault(n => n.Name == name);
+    }
+
     public List<Path> FindAllPaths(N start, N end)
     {
         List<Path> result = new List<Path>();
