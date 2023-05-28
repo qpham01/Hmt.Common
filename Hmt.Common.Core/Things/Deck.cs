@@ -11,6 +11,14 @@ public class Deck<T> : Thing where T : ICard
         Cards.Add(card);
     }
 
+    public T? Draw(string name)
+    {
+        var card = Cards.FirstOrDefault(c => c.Name == name);
+        if (card != null)
+            Cards.Remove(card);
+        return card;
+    }
+
     public T Draw(int index = -1)
     {
         if (index == -1)
