@@ -65,6 +65,28 @@ public abstract class ConsoleView : IView
         return Console.ReadLine();
     }
 
+    protected bool GetYesNo(string text, bool defaultYes, bool noDefault = false)
+    {
+        var yesno = defaultYes ? "[Y/n]" : "[y/N]";
+        if (noDefault)
+            yesno = "[y/n]";
+        while (true)
+        {
+            Write($"{text} {yesno}: ");
+            var answer = Console.ReadLine()!.ToLower();
+            if (!string.IsNullOrWhiteSpace(answer))
+            {
+                if (answer == "y" || answer == "yes")
+                    return true;
+                if (answer == "n" || answer == "no")
+                    return false;
+            }
+            if (noDefault)
+                continue;
+            return defaultYes;
+        }
+    }
+
     protected void WriteLineFailure(string message)
     {
         WriteLineInColor(message, ConsoleColor.Red);
