@@ -14,13 +14,18 @@ public abstract class ConsoleView : IView
     {
         Console.WriteLine("");
         Console.WriteLine(title);
-
+        var choiceMap = new Dictionary<string, int>();
         for (var i = 0; i < choices.Count; i++)
         {
-            Console.WriteLine($"{i + 1:00}. {choices[i]}");
+            choiceMap.Add(choices[i], i);
+        }
+        var sortedChoices = choices.OrderBy(x => x).ToArray();
+        for (var i = 0; i < choices.Count; i++)
+        {
+            Console.WriteLine($"{i + 1:00}. {sortedChoices[i]}");
         }
         var choice = Choose(prompt, 1, choices.Count);
-        return choice;
+        return choiceMap[sortedChoices[choice]];
     }
 
     public int Choose(string prompt, int min, int max)
