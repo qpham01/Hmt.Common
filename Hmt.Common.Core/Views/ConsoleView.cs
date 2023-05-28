@@ -10,22 +10,32 @@ public abstract class ConsoleView : IView
 
     public abstract void Show();
 
-    public int Choose(string title, string prompt, IReadOnlyList<string> choices)
+    public int Choose(string title, string prompt, IReadOnlyList<string> choices, bool sort = true)
     {
         Console.WriteLine("");
         Console.WriteLine(title);
         var choiceMap = new Dictionary<string, int>();
-        for (var i = 0; i < choices.Count; i++)
-        {
-            choiceMap.Add(choices[i], i);
-        }
         var sortedChoices = choices.OrderBy(x => x).ToArray();
-        for (var i = 0; i < choices.Count; i++)
+        if (sort)
         {
-            Console.WriteLine($"{i + 1:00}. {sortedChoices[i]}");
+            for (var i = 0; i < choices.Count; i++)
+            {
+                choiceMap.Add(choices[i], i);
+            }
+            for (var i = 0; i < choices.Count; i++)
+            {
+                Console.WriteLine($"{i + 1:00}. {sortedChoices[i]}");
+            }
+        }
+        else
+        {
+            for (var i = 0; i < choices.Count; i++)
+            {
+                Console.WriteLine($"{i + 1:00}. {choices[i]}");
+            }
         }
         var choice = Choose(prompt, 1, choices.Count);
-        return choiceMap[sortedChoices[choice]];
+        return sort ? choiceMap[sortedChoices[choice]] : choice;
     }
 
     public int Choose(string prompt, int min, int max)
