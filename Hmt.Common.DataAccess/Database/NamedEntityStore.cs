@@ -5,7 +5,7 @@ using Marten;
 namespace Hmt.Common.DataAccess.Database;
 
 public class NamedEntityStore<T> : EntityStoreGuidKey<T>, INamedEntityStore<T>
-    where T : class, IEntity<Guid>, ISoftDeletable, IHasName, IDisposable
+    where T : class, IEntity<Guid>, ISoftDeletable, IHasName
 {
     public NamedEntityStore(INamedEntityStoreWrapper<T> storeWrapper) : base(storeWrapper) { }
 
