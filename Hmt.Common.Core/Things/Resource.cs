@@ -1,11 +1,11 @@
 ﻿namespace Hmt.Common.Core.Things;
 
-public class Resource : Thing
+public class Stat : Thing
 {
-    public int Count { get; set; }
+    public int Value { get; set; }
 
     public override string ToString()
     {
-        return $"{Count} {Name}";
+        return $"{Name}: {Value}";
     }
 }

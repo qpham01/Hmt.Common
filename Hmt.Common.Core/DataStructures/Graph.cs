@@ -1,4 +1,5 @@
 ﻿using Hmt.Common.Core.Interfaces;
+using Hmt.Common.Core.Things;
 
 namespace Hmt.Common.Core.DataStructures;
 
@@ -22,15 +23,7 @@ public class Node : IGraphNode
 
     public virtual bool Blocked { get; set; } = false;
 
-    protected List<Edge> _edges = new();
-    public Edge[] Edges => _edges.ToArray();
-
-    public void AddEdge(Node to, double distance, bool bidirectional)
-    {
-        _edges.Add(new Edge(this, to, distance));
-        if (bidirectional)
-            to.AddEdge(this, distance, false);
-    }
+    public List<Edge> Edges { get; set; } = new();
 }
 
 public class Path

@@ -1,3 +1,3 @@
 ﻿namespace Hmt.Common.Core.Interfaces;
 
-public interface ICard : IHasName { }
+public interface ICard : IHasName, IHasDescription, IHasStatus { }
