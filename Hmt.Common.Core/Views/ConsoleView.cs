@@ -5,10 +5,13 @@ namespace Hmt.Common.Core.Views;
 public abstract class ConsoleView : IView
 {
     public const string TableSeparator = "|";
+    protected ConsoleColor _failureColor = ConsoleColor.Red;
+    protected ConsoleColor _successColor = ConsoleColor.Green;
 
     public ConsoleView() { }
 
     public abstract void Show();
+    public abstract void Show(IGameRunner gameRunner);
 
     public int Choose(string title, string prompt, IReadOnlyList<string> choices, bool sort = true)
     {
@@ -59,10 +62,17 @@ public abstract class ConsoleView : IView
         return choice - 1;
     }
 
-    protected string? GetInput(string text)
+    protected string? GetInput(string text, string? defaultAnswer = null)
     {
         Write(text);
-        return Console.ReadLine();
+        if (defaultAnswer != null)
+            Write($" [default: {defaultAnswer}]: ");
+        else
+            Write(": ");
+        var answer = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(answer) && defaultAnswer != null)
+            return defaultAnswer;
+        return answer;
     }
 
     protected bool GetYesNo(string text, bool defaultYes, bool noDefault = false)
@@ -87,14 +97,14 @@ public abstract class ConsoleView : IView
         }
     }
 
-    protected void WriteLineFailure(string message)
+    protected void WriteLineFailure(string text)
     {
-        WriteLineInColor(message, ConsoleColor.Red);
+        WriteLineInColor(text, _failureColor);
     }
 
     protected void WriteLineSuccess(string message)
     {
-        WriteLineInColor(message, ConsoleColor.Green);
+        WriteLineInColor(message, _successColor);
     }
 
     protected void WriteLine(string text)
