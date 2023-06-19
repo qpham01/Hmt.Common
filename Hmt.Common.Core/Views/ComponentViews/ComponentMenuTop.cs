@@ -61,6 +61,22 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
                 if (newComponent != null)
                     AddNewComponent(newComponent);
             }
+            else if (choice == 4) { }
+            else if (choice == 5)
+            {
+                var name = GetInput("Enter name of component to delete");
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+                var components = GetComponents(null);
+                var toDelete = components.FirstOrDefault(c => c.Name == name);
+                if (toDelete != null)
+                {
+                    components.Remove(toDelete);
+                    WriteLineSuccess($"{_componentName} named {toDelete.Name} has been deleted.");
+                }
+                else
+                    WriteLineFailure($"Cannot find {_componentName.ToLower()} named {name} to delete.");
+            }
         }
     }
 
@@ -136,7 +152,7 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
     {
         if (components.Count == 0)
         {
-            WriteLineInColor($"No {_componentName} to show.", _failureColor);
+            WriteLineInColor($"No {_componentName.ToLower()} to show.", _failureColor);
             return;
         }
         var choices = components.Select(x => x.Name).ToList();
