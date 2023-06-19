@@ -17,10 +17,8 @@ public class Edge
     }
 }
 
-public class Node : IGraphNode
+public class Node : Thing, IGraphNode
 {
-    public virtual string Name { get; set; } = string.Empty;
-
     public virtual bool Blocked { get; set; } = false;
 
     public List<Edge> Edges { get; set; } = new();

@@ -2,7 +2,7 @@
 
 namespace Hmt.Common.Core.Things;
 
-public class Deck<T> : Thing where T : ICard
+public class Deck<T> : Component where T : ICard
 {
     public List<T> Cards { get; set; } = new();
 

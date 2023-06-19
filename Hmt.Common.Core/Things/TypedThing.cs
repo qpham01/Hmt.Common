@@ -4,10 +4,5 @@ namespace Hmt.Common.Core.Things;
 
 public class TypedThing : Thing, IHasType
 {
-    public string Type { get; private set; } = string.Empty;
-
-    public TypedThing(string type)
-    {
-        Type = type;
-    }
+    public string Type { get; set; } = string.Empty;
 }

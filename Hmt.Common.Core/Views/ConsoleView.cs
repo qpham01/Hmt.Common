@@ -7,6 +7,12 @@ public abstract class ConsoleView : IView
     public const string TableSeparator = "|";
     protected ConsoleColor _failureColor = ConsoleColor.Red;
     protected ConsoleColor _successColor = ConsoleColor.Green;
+    protected ConsoleColor _infoColor = ConsoleColor.White;
+    protected ConsoleColor _labelColor = ConsoleColor.Yellow;
+    protected ConsoleColor _headerColor = ConsoleColor.Cyan;
+    protected ConsoleColor _promptColor = ConsoleColor.Yellow;
+    protected ConsoleColor _inputColor = ConsoleColor.White;
+    protected ConsoleColor _exampleColor = ConsoleColor.Magenta;
 
     public ConsoleView() { }
 
@@ -75,6 +81,12 @@ public abstract class ConsoleView : IView
         return answer;
     }
 
+    protected void HitEnterPrompt()
+    {
+        Write("Please hit <Enter> to continue.");
+        var answer = Console.ReadLine();
+    }
+
     protected bool GetYesNo(string text, bool defaultYes, bool noDefault = false)
     {
         var yesno = defaultYes ? "[Y/n]" : "[y/N]";
@@ -131,5 +143,17 @@ public abstract class ConsoleView : IView
         Console.ForegroundColor = color;
         Console.Write(text);
         Console.ForegroundColor = prevColor;
+    }
+
+    protected void WriteLabeledText(string label, string text)
+    {
+        WriteInColor(label, _labelColor);
+        WriteInColor(text, _infoColor);
+    }
+
+    protected void WriteLineLabeledText(string label, string text)
+    {
+        WriteInColor(label, _labelColor);
+        WriteLineInColor(text, _infoColor);
     }
 }

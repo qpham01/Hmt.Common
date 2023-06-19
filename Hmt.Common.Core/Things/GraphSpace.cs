@@ -15,7 +15,5 @@ public class GraphSpace : Component, IGraphNode, ISpace
 
     public List<Edge> Edges { get; set; } = new();
 
-    public GraphSpace(string type) : base(type) { }
-
     #endregion
 }
