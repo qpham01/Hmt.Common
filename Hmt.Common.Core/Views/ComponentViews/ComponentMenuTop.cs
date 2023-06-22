@@ -152,8 +152,9 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         }
         if (typePart != null)
         {
-            var type = typePart.Split(":");
-            component.Type = type[1];
+            var typeParts = typePart.Split(":");
+            var type = GetTypeFromStart(typeParts[1], _game.Templates.Values.ToList());
+            component.Type = type == null ? typeParts[1] : type;
         }
         var isTemplate = component is Template;
         if (isTemplate && string.IsNullOrWhiteSpace(component.Name))
@@ -218,6 +219,12 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         return name;
     }
 
+    private string? GetTypeFromStart<U>(string typePart, List<U> things) where U : IHasType
+    {
+        var type = things.FirstOrDefault(x => x.Type.StartsWith(typePart))?.Type;
+        return type;
+    }
+
     protected virtual void ShowComponents(List<T> components)
     {
         if (components.Count == 0)
@@ -263,6 +270,7 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         {
             var componentFilter = new ComponentFilter();
             componentFilter.ParseFromInputString(filterString);
+            return componentFilter;
         }
         return null;
     }
