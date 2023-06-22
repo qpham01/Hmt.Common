@@ -57,22 +57,44 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
             }
             else if (choice == 3)
             {
-                var newComponent = GetNewComponentInput();
-                if (newComponent != null)
-                    AddNewComponent(newComponent);
+                var newComponent = GetNewComponent();
+                if (newComponent == null)
+                    continue;
+                AddNewComponent(newComponent);
+                WriteLineSuccess($"{_componentName} named {newComponent?.Name} has been added.");
+                ShowComponent(newComponent!);
             }
-            else if (choice == 4) { }
+            else if (choice == 4)
+            {
+                var name = GetInput($"Enter name of {_componentName.ToLower()} to edit");
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+                var toEdit = GetComponents(null).FirstOrDefault(c => c.Name.StartsWith(name));
+                if (toEdit != null)
+                {
+                    ShowComponent(toEdit);
+                    EditComponent(toEdit);
+                    WriteLineSuccess($"{_componentName} named {toEdit.Name} has been changed.");
+                    ShowComponent(toEdit);
+                }
+                else
+                    WriteLineFailure($"Cannot find {_componentName.ToLower()} named {name} to delete.");
+            }
             else if (choice == 5)
             {
-                var name = GetInput("Enter name of component to delete");
+                var name = GetInput($"Enter name of {_componentName.ToLower()} to delete");
                 if (string.IsNullOrWhiteSpace(name))
                     continue;
                 var components = GetComponents(null);
-                var toDelete = components.FirstOrDefault(c => c.Name == name);
+                var toDelete = components.FirstOrDefault(c => c.Name.StartsWith(name));
                 if (toDelete != null)
                 {
-                    components.Remove(toDelete);
-                    WriteLineSuccess($"{_componentName} named {toDelete.Name} has been deleted.");
+                    ShowComponent(toDelete);
+                    if (GetYesNo($"Confirm deletion of {_componentName.ToLower()} named {toDelete.Name}", false))
+                    {
+                        components.Remove(toDelete);
+                        WriteLineSuccess($"{_componentName} named {toDelete.Name} has been deleted.");
+                    }
                 }
                 else
                     WriteLineFailure($"Cannot find {_componentName.ToLower()} named {name} to delete.");
@@ -80,12 +102,11 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         }
     }
 
-    protected virtual T? GetNewComponentInput()
+    protected virtual string? GetComponentInput(bool isNew)
     {
-        WriteLineInColor(
-            $"Please type in on one line the following |-separated formatted string (n: and t: are required):",
-            _promptColor
-        );
+        var prompt = "Please type in on one line the following |-separated formatted string";
+        prompt += (isNew) ? "(n: and t: are required):" : ":";
+        WriteLineInColor(prompt, _promptColor);
         WriteLineInColor(
             $"n:<name>|t:<type>|d:<description>|1 or more of r:<ResourceName=Count>|1 or more of s:<StatName=Value>",
             _infoColor
@@ -95,39 +116,66 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
             $"n:Goblin|t:Monster|d:A green-skinned humanoid.|r:gold=3|r:gems=0|s:health=10|s:attack=5"
         );
         var input = GetInput("Please enter component line");
-        if (input == null)
-            return null;
-        var newComponent = ParseNewLine(input);
-        return newComponent;
+        return input;
     }
 
-    private T? ParseNewLine(string input)
+    protected virtual T? GetNewComponent()
     {
+        var input = GetComponentInput(true);
+        if (input == null)
+            return null;
+
+        var component = ParseComponentLine(input, null);
+        return component;
+    }
+
+    protected virtual void EditComponent(T toEdit)
+    {
+        var input = GetComponentInput(false);
+        if (input == null)
+            return;
+        ParseComponentLine(input, toEdit);
+    }
+
+    private T? ParseComponentLine(string input, T? component)
+    {
+        var isNew = false;
+        if (component == null)
+        {
+            component = new T();
+            isNew = true;
+        }
+
         var parts = input.Split('|');
 
         var namePart = parts.FirstOrDefault(x => x.StartsWith("n:"));
         var typePart = parts.FirstOrDefault(x => x.StartsWith("t:"));
-        if (namePart == null)
+        if (isNew && namePart == null)
         {
-            WriteLineFailure($"No name (n:) in input {input}");
+            WriteLineFailure($"No name (n:) for new {_componentName.ToLower()} in input {input}");
             return null;
         }
 
-        if (typePart == null)
+        if (isNew && typePart == null)
         {
-            WriteLineFailure($"No type (t:) in input {input}");
+            WriteLineFailure($"No type (t:) for new {_componentName.ToLower()} in input {input}");
             return null;
         }
-        var newComponent = new T();
-        var name = namePart.Split(":");
-        newComponent.Name = name[1];
-        var type = typePart.Split(":");
-        newComponent.Type = type[1];
+        if (namePart != null)
+        {
+            var name = namePart.Split(":");
+            component.Name = name[1];
+        }
+        if (typePart != null)
+        {
+            var type = typePart.Split(":");
+            component.Type = type[1];
+        }
         var descriptionPart = parts.FirstOrDefault(x => x.StartsWith("d:"));
         if (descriptionPart != null)
         {
             var description = descriptionPart.Split(":");
-            newComponent.Description = description[1];
+            component.Description = description[1];
         }
         var resources = parts.Where(x => x.StartsWith("r:"));
         foreach (var resourcePart in resources)
@@ -135,7 +183,7 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
             var resourceString = resourcePart.Split(":");
             var resourceParts = resourceString[1].Split("=");
             var resource = new Resource { Name = resourceParts[0], Count = int.Parse(resourceParts[1]) };
-            newComponent.Resources.Add(resource);
+            component.SetResource(resource);
         }
         var stats = parts.Where(x => x.StartsWith("s:"));
         foreach (var statPart in stats)
@@ -143,9 +191,9 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
             var statString = statPart.Split(":");
             var statParts = statString[1].Split("=");
             var stat = new Stat { Name = statParts[0], Value = int.Parse(statParts[1]) };
-            newComponent.Stats.Add(stat);
+            component.SetStat(stat);
         }
-        return newComponent;
+        return component;
     }
 
     protected virtual void ShowComponents(List<T> components)
@@ -157,7 +205,7 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         }
         var choices = components.Select(x => x.Name).ToList();
         choices.Insert(0, "Go Back");
-        var choice = Choose("Components to Show", "Select component to show more details", choices, false);
+        var choice = Choose($"{_componentName}s to Show", "Select component to show more details", choices, false);
         if (choice == 0)
             return;
         choice--;

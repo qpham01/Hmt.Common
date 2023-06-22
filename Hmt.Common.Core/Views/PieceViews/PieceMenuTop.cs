@@ -1,21 +1,20 @@
-﻿using Hmt.Common.Core.Interfaces;
-using Hmt.Common.Core.Things;
-using Hmt.Common.Core.Views.GameViews;
+﻿using Hmt.Common.Core.Things;
+using Hmt.Common.Core.Views.ComponentViews;
 
-namespace Hmt.Common.Core.Views.PieceView
+namespace Hmt.Common.Core.Views.PieceView;
+
+public class PieceMenuTop : ComponentMenuTop<Piece>
 {
-    internal class PieceMenuTop : GameMenuBase
+    public PieceMenuTop(Game game) : base(game, nameof(Piece)) { }
+
+    protected override void AddNewComponent(Piece newPiece)
     {
-        public PieceMenuTop(Game game) : base(game) { }
+        _game.Pieces.Add(newPiece);
+    }
 
-        public override void Show()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Show(IGameRunner gameRunner)
-        {
-            throw new NotImplementedException();
-        }
+    protected override List<Piece> GetComponents(ComponentFilter? filter)
+    {
+        var boards = _game.Pieces;
+        return ApplyFilter(boards, filter);
     }
 }

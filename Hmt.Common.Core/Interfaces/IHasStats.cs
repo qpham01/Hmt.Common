@@ -13,6 +13,15 @@ public interface IHasStats
         return stat.Value;
     }
 
+    void SetStatValue(string statName, int value)
+    {
+        var stat = Stats.Find(x => x.Name == statName);
+        if (stat == null)
+            Stats.Add(new Stat { Name = statName, Value = value });
+        else
+            stat.Value = value;
+    }
+
     int ChangeStat(string statName, int change)
     {
         var stat = Stats.Find(x => x.Name == statName);
