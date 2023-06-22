@@ -139,28 +139,12 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
 
     private T? ParseComponentLine(string input, T? component)
     {
-        var isNew = false;
         if (component == null)
-        {
             component = new T();
-            isNew = true;
-        }
-
         var parts = input.Split('|');
 
         var namePart = parts.FirstOrDefault(x => x.StartsWith("n:"));
         var typePart = parts.FirstOrDefault(x => x.StartsWith("t:"));
-        if (isNew && namePart == null)
-        {
-            WriteLineFailure($"No name (n:) for new {_componentName.ToLower()} in input {input}");
-            return null;
-        }
-
-        if (isNew && typePart == null)
-        {
-            WriteLineFailure($"No type (t:) for new {_componentName.ToLower()} in input {input}");
-            return null;
-        }
         if (namePart != null)
         {
             var name = namePart.Split(":");
@@ -170,6 +154,25 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         {
             var type = typePart.Split(":");
             component.Type = type[1];
+        }
+        var isTemplate = component is Template;
+        if (isTemplate && string.IsNullOrWhiteSpace(component.Name))
+            component.Name = $"T{component.Type}";
+        if (string.IsNullOrWhiteSpace(component.Name))
+        {
+            WriteLineFailure($"No name (n:) for new {_componentName.ToLower()} in input {input}");
+            return null;
+        }
+        if (string.IsNullOrWhiteSpace(component.Type))
+        {
+            WriteLineFailure($"No type (t:) for new {_componentName.ToLower()} in input {input}");
+            return null;
+        }
+        Template? template = null;
+        if (!isTemplate && !_game.Templates.TryGetValue(component.Type, out template))
+        {
+            WriteLineFailure($"No template found for {_componentName.ToLower()} of type {component.Type}");
+            return null;
         }
         var descriptionPart = parts.FirstOrDefault(x => x.StartsWith("d:"));
         if (descriptionPart != null)
@@ -182,7 +185,14 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         {
             var resourceString = resourcePart.Split(":");
             var resourceParts = resourceString[1].Split("=");
-            var resource = new Resource { Name = resourceParts[0], Count = int.Parse(resourceParts[1]) };
+            var resourceName =
+                template == null ? resourceParts[0] : GetNameFromStart(resourceParts[0], template.Resources, template);
+            if (resourceName == null)
+            {
+                WriteLineFailure($"Cannot find resource name for {resourceParts[0]}.");
+                continue;
+            }
+            var resource = new Resource { Name = resourceName, Count = int.Parse(resourceParts[1]) };
             component.SetResource(resource);
         }
         var stats = parts.Where(x => x.StartsWith("s:"));
@@ -190,10 +200,22 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         {
             var statString = statPart.Split(":");
             var statParts = statString[1].Split("=");
-            var stat = new Stat { Name = statParts[0], Value = int.Parse(statParts[1]) };
+            var statName = template == null ? statParts[0] : GetNameFromStart(statParts[0], template.Stats, template);
+            if (statName == null)
+            {
+                WriteLineFailure($"Cannot find resource name for {statParts[0]}.");
+                continue;
+            }
+            var stat = new Stat { Name = statName, Value = int.Parse(statParts[1]) };
             component.SetStat(stat);
         }
         return component;
+    }
+
+    private string? GetNameFromStart<U>(string namePart, List<U> things, Template template) where U : IHasName
+    {
+        var name = things.FirstOrDefault(x => x.Name.StartsWith(namePart))?.Name;
+        return name;
     }
 
     protected virtual void ShowComponents(List<T> components)

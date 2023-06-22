@@ -7,4 +7,5 @@ public class Game : Thing
     public List<Piece> Pieces { get; set; } = new();
     public List<Deck<Card>> Decks { get; set; } = new();
     public List<Card> Cards { get; set; } = new();
+    public Dictionary<string, Template> Templates { get; set; } = new();
 }

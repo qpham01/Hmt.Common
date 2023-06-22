@@ -5,6 +5,7 @@ using Hmt.Common.Core.Views.CardViews;
 using Hmt.Common.Core.Views.GraphSpaceView;
 using Hmt.Common.Core.Views.PieceView;
 using Hmt.Common.Core.Views.ScenarioView;
+using Hmt.Common.Core.Views.TemplateViews;
 
 namespace Hmt.Common.Core.Views.GameViews;
 
@@ -25,6 +26,7 @@ public class GameMenuComponents : GameMenuBase
                 "Edit Graph Spaces",
                 "Edit Pieces",
                 "Edit Scenarios",
+                "Edit Templates"
             };
 
             var choice = Choose("Game Component Action", "Select action", choices, false);
@@ -55,6 +57,10 @@ public class GameMenuComponents : GameMenuBase
             else if (choice == 6)
             {
                 nextView = new ScenarioMenuTop(_game);
+            }
+            else if (choice == 7)
+            {
+                nextView = new TemplateMenuTop(_game);
             }
 
             if (nextView != null)
