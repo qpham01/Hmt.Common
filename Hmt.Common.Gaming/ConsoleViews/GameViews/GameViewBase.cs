@@ -3,7 +3,7 @@ using Hmt.Common.Gaming.Components;
 using Hmt.Common.Gaming.Interfaces;
 using Newtonsoft.Json;
 
-namespace Hmt.Common.Gaming.Views.GameViews;
+namespace Hmt.Common.Gaming.ConsoleViews.GameViews;
 
 public abstract class GameViewBase : ConsoleView, IGameView
 {

@@ -1,8 +1,8 @@
 ﻿using Hmt.Common.Gaming.Components;
 using Hmt.Common.Gaming.Interfaces;
-using Hmt.Common.Gaming.Views.GameViews;
+using Hmt.Common.Gaming.ConsoleViews.GameViews;
 
-namespace Hmt.Common.Gaming.Views.GraphSpaceViews;
+namespace Hmt.Common.Gaming.ConsoleViews.GraphSpaceViews;
 
 internal class GraphSpaceMenuTop : GameMenuBase
 {

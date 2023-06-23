@@ -1,4 +1,4 @@
-﻿namespace Hmt.Common.Gaming.Views.ComponentViews;
+﻿namespace Hmt.Common.Gaming.ConsoleViews.ComponentViews;
 
 public class ComponentFilter
 {

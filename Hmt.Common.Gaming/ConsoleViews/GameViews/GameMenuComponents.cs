@@ -1,14 +1,14 @@
 ﻿using Hmt.Common.Core.Interfaces;
 using Hmt.Common.Gaming.Components;
 using Hmt.Common.Gaming.Interfaces;
-using Hmt.Common.Gaming.Views.BoardViews;
-using Hmt.Common.Gaming.Views.CardViews;
-using Hmt.Common.Gaming.Views.GraphSpaceViews;
-using Hmt.Common.Gaming.Views.PieceViews;
-using Hmt.Common.Gaming.Views.ScenarioView;
-using Hmt.Common.Gaming.Views.TemplateViews;
+using Hmt.Common.Gaming.ConsoleViews.BoardViews;
+using Hmt.Common.Gaming.ConsoleViews.CardViews;
+using Hmt.Common.Gaming.ConsoleViews.GraphSpaceViews;
+using Hmt.Common.Gaming.ConsoleViews.PieceViews;
+using Hmt.Common.Gaming.ConsoleViews.ScenarioView;
+using Hmt.Common.Gaming.ConsoleViews.TemplateViews;
 
-namespace Hmt.Common.Gaming.Views.GameViews;
+namespace Hmt.Common.Gaming.ConsoleViews.GameViews;
 
 public class GameMenuComponents : GameMenuBase
 {

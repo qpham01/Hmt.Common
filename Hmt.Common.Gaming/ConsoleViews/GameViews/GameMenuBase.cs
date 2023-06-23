@@ -1,6 +1,6 @@
 ﻿using Hmt.Common.Gaming.Components;
 
-namespace Hmt.Common.Gaming.Views.GameViews;
+namespace Hmt.Common.Gaming.ConsoleViews.GameViews;
 
 public abstract class GameMenuBase : GameViewBase
 {

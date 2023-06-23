@@ -1,7 +1,7 @@
 ﻿using Hmt.Common.Gaming.Components;
-using Hmt.Common.Gaming.Views.ComponentViews;
+using Hmt.Common.Gaming.ConsoleViews.ComponentViews;
 
-namespace Hmt.Common.Gaming.Views.PieceViews;
+namespace Hmt.Common.Gaming.ConsoleViews.PieceViews;
 
 public class PieceMenuTop : ComponentMenuTop<Piece>
 {

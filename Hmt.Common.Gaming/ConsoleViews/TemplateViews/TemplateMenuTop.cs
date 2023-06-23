@@ -1,7 +1,7 @@
 ﻿using Hmt.Common.Gaming.Components;
-using Hmt.Common.Gaming.Views.ComponentViews;
+using Hmt.Common.Gaming.ConsoleViews.ComponentViews;
 
-namespace Hmt.Common.Gaming.Views.TemplateViews;
+namespace Hmt.Common.Gaming.ConsoleViews.TemplateViews;
 
 public class TemplateMenuTop : ComponentMenuTop<Template>
 {

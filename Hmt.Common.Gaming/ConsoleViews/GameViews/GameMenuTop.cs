@@ -1,8 +1,8 @@
 ﻿using Hmt.Common.Gaming.Components;
 using Hmt.Common.Gaming.Interfaces;
-using Hmt.Common.Gaming.Views.GameSessionViews;
+using Hmt.Common.Gaming.ConsoleViews.GameSessionViews;
 
-namespace Hmt.Common.Gaming.Views.GameViews;
+namespace Hmt.Common.Gaming.ConsoleViews.GameViews;
 
 public class GameMenuTop : GameMenuBase
 {
