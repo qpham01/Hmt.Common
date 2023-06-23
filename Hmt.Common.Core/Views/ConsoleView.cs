@@ -17,7 +17,6 @@ public abstract class ConsoleView : IView
     public ConsoleView() { }
 
     public abstract void Show();
-    public abstract void Show(IGameRunner gameRunner);
 
     public int Choose(string title, string prompt, IReadOnlyList<string> choices, bool sort = true)
     {

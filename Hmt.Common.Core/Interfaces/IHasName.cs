@@ -1,6 +1,4 @@
-﻿using System.Collections.Specialized;
-
-namespace Hmt.Common.Core.Interfaces;
+﻿namespace Hmt.Common.Core.Interfaces;
 
 public interface IHasName
 {

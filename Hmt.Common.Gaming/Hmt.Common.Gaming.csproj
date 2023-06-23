@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Folder Include="Views\PlayViews\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hmt.Common.Core\Hmt.Common.Core.csproj" />
   </ItemGroup>
 
 </Project>

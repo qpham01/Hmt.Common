@@ -22,6 +22,13 @@ public class Node : Thing, IGraphNode
     public virtual bool Blocked { get; set; } = false;
 
     public List<Edge> Edges { get; set; } = new();
+
+    public virtual void AddEdge(IGraphNode to, double distance, bool bidirectional)
+    {
+        Edges.Add(new Edge(this, to, distance));
+        if (bidirectional)
+            to.AddEdge(this, distance, false);
+    }
 }
 
 public class Path

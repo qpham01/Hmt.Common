@@ -3,5 +3,4 @@
 public interface IView
 {
     void Show();
-    void Show(IGameRunner gameRunner);
 }
