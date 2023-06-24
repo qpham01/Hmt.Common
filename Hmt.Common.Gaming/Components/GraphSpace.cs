@@ -6,9 +6,8 @@ namespace Hmt.Common.Gaming.Components;
 
 public class GraphSpace : Component, IGraphNode, ISpace
 {
-    public List<string> AllowedPieceTypes { get; set; } = new();
-    public List<Piece> ContainedPieces { get; set; } = new();
-    public List<GraphSpace> SubSpaces { get; set; } = new();
+    public Dictionary<string, int> MaxCountPerType { get; set; } = new();
+    public Dictionary<string, Piece> ContainedPieces { get; set; } = new();
 
     #region IGraphNode
 

@@ -49,17 +49,13 @@ public class GameMenuComponents : GameMenuBase
             }
             else if (choice == 4)
             {
-                nextView = new GraphSpaceMenuTop(_game);
+                nextView = new PieceMenuTop(_game);
             }
             else if (choice == 5)
             {
-                nextView = new PieceMenuTop(_game);
-            }
-            else if (choice == 6)
-            {
                 nextView = new ScenarioMenuTop(_game);
             }
-            else if (choice == 7)
+            else if (choice == 6)
             {
                 nextView = new TemplateMenuTop(_game);
             }

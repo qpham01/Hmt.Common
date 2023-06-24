@@ -147,7 +147,7 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         ParseComponentLine(input, toEdit);
     }
 
-    private T? ParseComponentLine(string input, T? component)
+    protected virtual T? ParseComponentLine(string input, T? component)
     {
         if (component == null)
             component = new T();
