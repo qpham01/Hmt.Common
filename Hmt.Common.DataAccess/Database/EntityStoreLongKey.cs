@@ -16,7 +16,7 @@ public class EntityStoreLongKey<T> : EntityStoreAbstract<T, long>
                 throw new InvalidOperationException("Session is null");
             var query = session.Query().Where(x => !x.IsDeleted && x.Id == id);
             var result = await session.CustomQuery(query);
-            return result.FirstOrDefault();
+            return result?.FirstOrDefault();
         }
     }
 

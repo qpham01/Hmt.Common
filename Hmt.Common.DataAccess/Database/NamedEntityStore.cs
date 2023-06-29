@@ -17,21 +17,4 @@ public class NamedEntityStore<T> : EntityStoreStringKey<T>, INamedEntityStore<T>
             return result.FirstOrDefault();
         }
     }
-
-    //public override async Task SoftDeleteAsync(string id)
-    //{
-    //    if (id == string.Empty)
-    //        throw new ArgumentNullException(nameof(id));
-
-    //    using (var session = _storeWrapper.OpenSession())
-    //    {
-    //        var entity = await ReadAsync(id);
-    //        if (entity != null)
-    //        {
-    //            entity.Name = $"{entity.Name}|{entity.Id}";
-    //            entity.IsDeleted = true;
-    //            await session.Store(entity);
-    //        }
-    //    }
-    //}
 }
