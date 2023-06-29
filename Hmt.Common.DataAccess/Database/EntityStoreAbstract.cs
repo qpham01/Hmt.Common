@@ -6,13 +6,13 @@ namespace Hmt.Common.DataAccess.Database;
 public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     where T : class, IEntity<TKey>, ISoftDeletable
 {
-    protected readonly IDocumentStoreWrapper _storeWrapper;
+    protected readonly IDocumentStoreWrapper<T, TKey> _storeWrapper;
 
     public abstract Task<T?> ReadAsync(TKey id);
 
     public abstract Task ApplyEventAsync(TKey id, object @event);
 
-    public EntityStoreAbstract(IDocumentStoreWrapper storeWrapper)
+    public EntityStoreAbstract(IDocumentStoreWrapper<T, TKey> storeWrapper)
     {
         _storeWrapper = storeWrapper;
     }
@@ -21,7 +21,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            await session.Store<T, TKey>(entity);
+            await session.Store(entity);
         }
         return entity;
     }
@@ -30,7 +30,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            await session.Store<T, TKey>(entity);
+            await session.Store(entity);
         }
     }
 
@@ -45,7 +45,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                await session.Store<T, TKey>(entity);
+                await session.Store(entity);
             }
         }
     }
@@ -54,7 +54,7 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            return await session.QueryAll<T>();
+            return await session.QueryAll();
         }
     }
 
@@ -62,13 +62,10 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
     {
         using (var session = _storeWrapper.OpenSession())
         {
-            return await session.Query<T>().Where(x => !x.IsDeleted).Skip(startIndex).Take(count).ToListAsync();
+            var query = session.Query().Where(x => !x.IsDeleted).Skip(startIndex).Take(count);
+            var result = await session.CustomQuery(query);
+            return result;
         }
-    }
-
-    public virtual ISessionWrapper GetSession()
-    {
-        return _storeWrapper.OpenSession();
     }
 
     public virtual async Task DeleteAsync(T entity)
@@ -76,8 +73,13 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
         using (var session = _storeWrapper.OpenSession())
         {
             if (session == null)
-                throw new InvalidOperationException("Session is null");
-            await session.DeleteAsync<T, TKey>(entity);
+                throw new ArgumentNullException(nameof(entity));
+            await session.DeleteAsync(entity);
         }
+    }
+
+    public ISessionWrapper<T, TKey> GetSession()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Database\DocumentStoreWrapperGuid.cs" />
-    <Compile Remove="Database\DocumentStoreWrapperLong.cs" />
     <Compile Remove="Database\SessionWrapperGuid.cs" />
     <Compile Remove="Database\SessionWrapperLong.cs" />
+    <Compile Remove="Interfaces\ISessionWrapperOld.cs" />
   </ItemGroup>
 
   <ItemGroup>

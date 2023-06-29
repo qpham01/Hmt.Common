@@ -6,7 +6,7 @@ namespace Hmt.Common.DataAccess.Database;
 public class EntityStoreLongKey<T> : EntityStoreAbstract<T, long>
     where T : class, IEntity<long>, ISoftDeletable, IDisposable
 {
-    public EntityStoreLongKey(IDocumentStoreWrapper storeWrapper) : base(storeWrapper) { }
+    public EntityStoreLongKey(IDocumentStoreWrapper<T, long> storeWrapper) : base(storeWrapper) { }
 
     public override async Task<T?> ReadAsync(long id)
     {
@@ -14,7 +14,9 @@ public class EntityStoreLongKey<T> : EntityStoreAbstract<T, long>
         {
             if (session == null)
                 throw new InvalidOperationException("Session is null");
-            return await session.Query<T>().Where(x => !x.IsDeleted && x.Id.Equals(id)).SingleAsync();
+            var query = session.Query().Where(x => !x.IsDeleted && x.Id.Equals(id));
+            var result = await session.CustomQuery(query);
+            return result.FirstOrDefault();
         }
     }
 

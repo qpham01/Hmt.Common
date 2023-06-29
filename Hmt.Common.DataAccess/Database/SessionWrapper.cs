@@ -3,13 +3,18 @@ using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class SessionWrapper : ISessionWrapper
+public abstract class SessionWrapper<T, TKey> : ISessionWrapper<T, TKey>, IDisposable
+    where T : class, IEntity<TKey>, ISoftDeletable
 {
-    private readonly IDocumentSession _session;
+    protected readonly IDocumentSession _session;
+    protected readonly IDatabaseQuery<T, TKey> _dbQuery;
 
-    public SessionWrapper(IDocumentSession session)
+    public IEventStoreWrapper Events => throw new NotImplementedException();
+
+    public SessionWrapper(IDocumentSession session, IDatabaseQuery<T, TKey> dbQuery)
     {
         _session = session;
+        _dbQuery = dbQuery;
     }
 
     public void Dispose()
@@ -17,33 +22,9 @@ public class SessionWrapper : ISessionWrapper
         _session.Dispose();
     }
 
-    public IQueryable<T> Query<T>()
+    public IQueryable<T> Query()
     {
         return _session.Query<T>();
-    }
-
-    public async Task<IReadOnlyList<T>> QueryAll<T>() where T : ISoftDeletable
-    {
-        return await _session.Query<T>().Where(x => !x.IsDeleted).ToListAsync();
-    }
-
-    public async Task<T?> QuerySingleById<T, TKey>(Guid id) where T : IEntity<TKey>, ISoftDeletable
-    {
-        return await Query<T>().Where(x => !x.IsDeleted && x.Id!.Equals(id)).SingleAsync();
-    }
-
-    public async Task Store<T, TKey>(T entity) where T : IEntity<TKey>
-    {
-        _session.Store(entity);
-        await _session.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync<T, TKey>(T entity) where T : IEntity<TKey>
-    {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
-        _session.Delete(entity);
-        await _session.SaveChangesAsync();
     }
 
     public async Task SaveChangesAsync()
@@ -51,5 +32,31 @@ public class SessionWrapper : ISessionWrapper
         await _session.SaveChangesAsync();
     }
 
-    public IEventStoreWrapper Events => new EventStoreWrapper(_session.Events);
+    public async Task<IReadOnlyList<T>> CustomQuery(IQueryable<T> query)
+    {
+        var result = await _dbQuery.QueryMany(query);
+        return result;
+    }
+
+    public async Task<IReadOnlyList<T>> QueryAll()
+    {
+        var query = _session.Query<T>().Where(x => !x.IsDeleted);
+        var result = await _dbQuery.QueryMany(query);
+        return result;
+    }
+
+    public async Task<IReadOnlyList<T>> QueryPaged(int startIndex, int count)
+    {
+        var query = _session.Query<T>().Where(x => !x.IsDeleted).Skip(startIndex).Take(count);
+        var result = await _dbQuery.QueryMany(query);
+        return result;
+    }
+
+    public async Task Store(T entity)
+    {
+        _session.Store(entity);
+        await _session.SaveChangesAsync();
+    }
+
+    public abstract Task DeleteAsync(T entity);
 }

@@ -2,7 +2,8 @@
 
 namespace Hmt.Common.DataAccess.Interfaces;
 
-public interface INamedEntityStore<T> : IEntityStore<T, Guid> where T : class, IEntity<Guid>, ISoftDeletable, IHasName
+public interface INamedEntityStore<T> : IEntityStore<T, string>
+    where T : class, IEntity<string>, ISoftDeletable, IHasName
 {
     Task<T?> ReadByName(string name);
 }

@@ -3,17 +3,15 @@ using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class DocumentStoreWrapper : IDocumentStoreWrapper
+public abstract class DocumentStoreWrapper<T, TKey> : IDocumentStoreWrapper<T, TKey>
+    where T : class, IEntity<TKey>, ISoftDeletable
 {
-    private readonly IDocumentStore _store;
+    protected readonly IDocumentStore _store;
 
     public DocumentStoreWrapper(IDocumentStoreProvider storeProvider, ISchema schema)
     {
         _store = storeProvider.MakeStore(schema.Name);
     }
 
-    public ISessionWrapper OpenSession()
-    {
-        return new SessionWrapper(_store.LightweightSession());
-    }
+    public abstract ISessionWrapper<T, TKey> OpenSession();
 }

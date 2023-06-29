@@ -17,7 +17,7 @@ public class TestEntityLong : IEntity<long>, ISoftDeletable, IDisposable
 public class EntityStoreLongKeyIntegrationTests
 {
     private IEntityStore<TestEntityLong, long> _sut;
-    private IDocumentStoreWrapper _storeWrapper;
+    private IDocumentStoreWrapper<TestEntityLong, long> _storeWrapper;
 
     private TestEntityLong _testEntity1;
     private TestEntityLong _testEntity2;
@@ -26,7 +26,10 @@ public class EntityStoreLongKeyIntegrationTests
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider(), new TestSchema { Name = "public" });
+        _storeWrapper = new DocumentStoreWrapperLong<TestEntityLong>(
+            new TestDocumentStoreProvider(),
+            new TestSchema { Name = "public" }
+        );
         _sut = new EntityStoreLongKey<TestEntityLong>(_storeWrapper);
         _testEntity1 = new TestEntityLong { Name = "Test Entity 1" };
         _testEntity2 = new TestEntityLong { Name = "Test Entity 2" };
@@ -75,7 +78,9 @@ public class EntityStoreLongKeyIntegrationTests
         // Assert - Update
         using (var session = _storeWrapper.OpenSession())
         {
-            var updatedEntity = await session.Query<TestEntityLong>().FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var query = session.Query().Where(x => !x.IsDeleted && x.Id == testEntity.Id);
+            var result = await session.CustomQuery(query);
+            var updatedEntity = result.FirstOrDefault();
             updatedEntity.Should().NotBeNull();
             updatedEntity!.Name.Should().Be("Updated Test Entity");
         }
@@ -86,9 +91,9 @@ public class EntityStoreLongKeyIntegrationTests
         // Assert - Soft Delete
         using (var session = _storeWrapper.OpenSession())
         {
-            var softDeletedEntity = await session
-                .Query<TestEntityLong>()
-                .FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var query = session.Query().Where(x => x.Id == testEntity.Id);
+            var result = await session.CustomQuery(query);
+            var softDeletedEntity = result.FirstOrDefault();
             softDeletedEntity.Should().NotBeNull();
             softDeletedEntity!.IsDeleted.Should().BeTrue();
         }
@@ -99,7 +104,9 @@ public class EntityStoreLongKeyIntegrationTests
         // Assert - Delete
         using (var session = _storeWrapper.OpenSession())
         {
-            var deletedEntity = await session.Query<TestEntityLong>().FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var query = session.Query().Where(x => x.Id == testEntity.Id);
+            var result = await session.CustomQuery(query);
+            var deletedEntity = result.FirstOrDefault();
             deletedEntity.Should().BeNull();
         }
     }

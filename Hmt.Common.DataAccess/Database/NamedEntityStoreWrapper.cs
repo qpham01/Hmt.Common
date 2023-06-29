@@ -4,17 +4,21 @@ using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
-public class NamedEntityStoreWrapper<T> : INamedEntityStoreWrapper<T> where T : IHasName, ISoftDeletable
+public abstract class NamedEntityStoreWrapper<T, TKey> : INamedEntityStoreWrapper<T, TKey>
+    where T : class, IHasName, IEntity<TKey>, ISoftDeletable
 {
     IDocumentStore _store;
+    IDatabaseQuery<T, TKey> _dbQuery;
 
-    public NamedEntityStoreWrapper(INamedEntityStoreProvider<T> storeProvider, ISchema schema)
+    public NamedEntityStoreWrapper(
+        INamedEntityStoreProvider<T> storeProvider,
+        IDatabaseQuery<T, TKey> dbQuery,
+        ISchema schema
+    )
     {
         _store = storeProvider.MakeStore(schema.Name);
+        _dbQuery = dbQuery;
     }
 
-    public ISessionWrapper OpenSession()
-    {
-        return new SessionWrapper(_store.LightweightSession());
-    }
+    public abstract ISessionWrapper<T, TKey> OpenSession();
 }

@@ -11,30 +11,34 @@ public class TestSchema : ISchema
     public string Description { get; set; } = string.Empty;
 }
 
-public class TestEntityGuid : IEntity<Guid>, ISoftDeletable
+public class TestEntityString : IEntity<string>, ISoftDeletable
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
 }
 
-public class EntityStoreGuidKeyIntegrationTests
+public class EntityStoreStringKeyIntegrationTests
 {
-    private IEntityStore<TestEntityGuid, Guid> _sut;
-    private IDocumentStoreWrapper _storeWrapper;
-
-    private TestEntityGuid _testEntity1;
-    private TestEntityGuid _testEntity2;
-    private TestEntityGuid _testEntity3;
+    private IEntityStore<TestEntityString, string> _sut;
+    private IDocumentStoreWrapper<TestEntityString, string> _storeWrapper;
+    private IDatabaseQuery<TestEntityString, string> _dbQuery;
+    private TestEntityString _testEntity1;
+    private TestEntityString _testEntity2;
+    private TestEntityString _testEntity3;
 
     [OneTimeSetUp]
     public async Task OneTimeSetup()
     {
-        _storeWrapper = new DocumentStoreWrapper(new TestDocumentStoreProvider(), new TestSchema { Name = "public" });
-        _sut = new EntityStoreGuidKey<TestEntityGuid>(_storeWrapper);
-        _testEntity1 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 1" };
-        _testEntity2 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 2" };
-        _testEntity3 = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity 3" };
+        _storeWrapper = new DocumentStoreWrapperString<TestEntityString>(
+            new TestDocumentStoreProvider(),
+            new TestSchema { Name = "public" }
+        );
+        _dbQuery = new DatabaseQuery<TestEntityString, string>();
+        _sut = new EntityStoreStringKey<TestEntityString>(_storeWrapper);
+        _testEntity1 = new TestEntityString { Id = Guid.NewGuid().ToString(), Name = "Test Entity 1" };
+        _testEntity2 = new TestEntityString { Id = Guid.NewGuid().ToString(), Name = "Test Entity 2" };
+        _testEntity3 = new TestEntityString { Id = Guid.NewGuid().ToString(), Name = "Test Entity 3" };
         await _sut.CreateAsync(_testEntity1);
         await _sut.CreateAsync(_testEntity2);
         await _sut.CreateAsync(_testEntity3);
@@ -51,10 +55,10 @@ public class EntityStoreGuidKeyIntegrationTests
     }
 
     [Test]
-    public async Task EntityStoreGuidKey_CRUD_Operations_Should_Work_Correctly()
+    public async Task EntityStoreStringKey_CRUD_Operations_Should_Work_Correctly()
     {
         // Arrange
-        var testEntity = new TestEntityGuid { Id = Guid.NewGuid(), Name = "Test Entity" };
+        var testEntity = new TestEntityString { Id = Guid.NewGuid().ToString(), Name = "Test Entity" };
 
         // Act - Create
         var createdEntity = await _sut.CreateAsync(testEntity);
@@ -79,7 +83,9 @@ public class EntityStoreGuidKeyIntegrationTests
         // Assert - Update
         using (var session = _storeWrapper.OpenSession())
         {
-            var updatedEntity = await session.Query<TestEntityGuid>().FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var query = session.Query().Where(x => !x.IsDeleted && x.Id == testEntity.Id);
+            var result = await session.CustomQuery(query);
+            var updatedEntity = result.FirstOrDefault();
             updatedEntity.Should().NotBeNull();
             updatedEntity!.Name.Should().Be("Updated Test Entity");
         }
@@ -90,9 +96,9 @@ public class EntityStoreGuidKeyIntegrationTests
         // Assert - Soft Delete
         using (var session = _storeWrapper.OpenSession())
         {
-            var softDeletedEntity = await session
-                .Query<TestEntityGuid>()
-                .FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var query = session.Query().Where(x => x.Id == testEntity.Id);
+            var result = await session.CustomQuery(query);
+            var softDeletedEntity = result.FirstOrDefault();
             softDeletedEntity.Should().NotBeNull();
             softDeletedEntity!.IsDeleted.Should().BeTrue();
         }
@@ -103,13 +109,15 @@ public class EntityStoreGuidKeyIntegrationTests
         // Assert - Delete
         using (var session = _storeWrapper.OpenSession())
         {
-            var deletedEntity = await session.Query<TestEntityGuid>().FirstOrDefaultAsync(x => x.Id == testEntity.Id);
+            var query = session.Query().Where(x => x.Id == testEntity.Id);
+            var result = await session.CustomQuery(query);
+            var deletedEntity = result.FirstOrDefault();
             deletedEntity.Should().BeNull();
         }
     }
 
     [Test]
-    public async Task EntityStoreGuidKey_ReadAll_Operation_Should_Work_Correctly()
+    public async Task EntityStoreStringKey_ReadAll_Operation_Should_Work_Correctly()
     {
         // Act
         var allEntities = await _sut.ReadAllAsync();
@@ -120,7 +128,7 @@ public class EntityStoreGuidKeyIntegrationTests
     }
 
     [Test]
-    public async Task EntityStoreGuidKey_ReadPage_Operation_Should_Work_Correctly()
+    public async Task EntityStoreStringKey_ReadPage_Operation_Should_Work_Correctly()
     {
         // Act
         var firstPageEntities = await _sut.ReadPageAsync(0, 2);

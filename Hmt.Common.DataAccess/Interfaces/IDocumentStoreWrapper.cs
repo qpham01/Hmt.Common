@@ -1,6 +1,6 @@
 ﻿namespace Hmt.Common.DataAccess.Interfaces;
 
-public interface IDocumentStoreWrapper
+public interface IDocumentStoreWrapper<T, TKey> where T : IEntity<TKey>, ISoftDeletable
 {
-    ISessionWrapper OpenSession();
+    ISessionWrapper<T, TKey> OpenSession();
 }

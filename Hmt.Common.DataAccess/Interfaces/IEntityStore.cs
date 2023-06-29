@@ -10,5 +10,5 @@ public interface IEntityStore<T, TKey> where T : class, IEntity<TKey>, ISoftDele
     Task SoftDeleteAsync(TKey id);
     Task DeleteAsync(T entity);
     Task ApplyEventAsync(TKey id, object @event);
-    ISessionWrapper GetSession();
+    ISessionWrapper<T, TKey> GetSession();
 }

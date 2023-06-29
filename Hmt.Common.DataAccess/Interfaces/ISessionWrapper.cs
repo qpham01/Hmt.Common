@@ -1,11 +1,13 @@
 ﻿namespace Hmt.Common.DataAccess.Interfaces;
 
-public interface ISessionWrapper : IDisposable
+public interface ISessionWrapper<T, TKey> : IDisposable where T : IEntity<TKey>, ISoftDeletable
 {
-    IQueryable<T> Query<T>();
-    Task<IReadOnlyList<T>> QueryAll<T>() where T : ISoftDeletable;
-    Task Store<T, TKey>(T entity) where T : IEntity<TKey>;
-    Task DeleteAsync<T, TKey>(T id) where T : IEntity<TKey>;
+    IQueryable<T> Query();
+    Task<IReadOnlyList<T>> CustomQuery(IQueryable<T> query);
+    Task<IReadOnlyList<T>> QueryAll();
+    Task<IReadOnlyList<T>> QueryPaged(int start, int count);
+    Task Store(T entity);
     Task SaveChangesAsync();
+    Task DeleteAsync(T entity);
     IEventStoreWrapper Events { get; }
 }
