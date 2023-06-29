@@ -63,24 +63,42 @@ namespace Hmt.Common.UnitTests.DataAccess
         }
 
         [Test]
-        public void ReadPageAsync_ShouldReturnPagedEntities()
+        public async Task ReadPageAsync_ShouldReturnPagedEntities()
         {
-            // IMartenQueryable prevents mocking
-            Assert.Pass();
+            var result = await _entityStore.ReadPageAsync(0, 4);
+            _sessionWrapperMock.Verify(x => x.Query(), Times.Once);
+            _sessionWrapperMock.Verify(x => x.CustomQuery(It.IsAny<IQueryable<TestEntity>>()), Times.Once);
         }
 
         [Test]
-        public void ReadAsync_ShouldCallQueryAndReturnEntity()
+        public async Task ReadAsync_ShouldCallQueryAndReturnEntity()
         {
-            // IMartenQueryable prevents mocking
-            Assert.Pass();
+            var data = new List<TestEntity>().AsQueryable();
+            _sessionWrapperMock.Setup(x => x.Query()).Returns(data);
+            var result = await _entityStore.ReadAsync("test");
+            _sessionWrapperMock.Verify(x => x.Query(), Times.Once);
+            _sessionWrapperMock.Verify(x => x.CustomQuery(It.IsAny<IQueryable<TestEntity>>()), Times.Once);
         }
 
         [Test]
-        public void SoftDeleteAsync_ShouldCallStoreAndSaveChanges()
+        public async Task SoftDeleteAsync_ShouldCallStoreAndSaveChanges()
         {
-            // IMartenQueryable prevents mocking
-            Assert.Pass();
+            _sessionWrapperMock
+                .Setup(x => x.CustomQuery(It.IsAny<IQueryable<TestEntity>>()))
+                .ReturnsAsync(new List<TestEntity> { new TestEntity() });
+            await _entityStore.SoftDeleteAsync("test");
+            _sessionWrapperMock.Verify(x => x.Query(), Times.Once);
+            _sessionWrapperMock.Verify(x => x.CustomQuery(It.IsAny<IQueryable<TestEntity>>()), Times.Once);
+            _sessionWrapperMock.Verify(x => x.Store(It.IsAny<TestEntity>()), Times.Once);
+        }
+
+        [Test]
+        public async Task SoftDeleteAsync_NotFoundShouldNotStore()
+        {
+            await _entityStore.SoftDeleteAsync("test");
+            _sessionWrapperMock.Verify(x => x.Query(), Times.Once);
+            _sessionWrapperMock.Verify(x => x.CustomQuery(It.IsAny<IQueryable<TestEntity>>()), Times.Once);
+            _sessionWrapperMock.Verify(x => x.Store(It.IsAny<TestEntity>()), Times.Never);
         }
 
         [Test]

@@ -1,5 +1,4 @@
 ﻿using Hmt.Common.DataAccess.Interfaces;
-using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
@@ -13,8 +12,9 @@ public class EntityStoreStringKey<T> : EntityStoreAbstract<T, string> where T : 
         {
             if (session == null)
                 throw new InvalidOperationException("Session is null");
-            var query = session.Query().Where(x => !x.IsDeleted && x.Id.Equals(id));
-            return await query.SingleAsync();
+            var query = session.Query().Where(x => !x.IsDeleted && x.Id == id);
+            var result = await session.CustomQuery(query);
+            return result?.FirstOrDefault();
         }
     }
 
