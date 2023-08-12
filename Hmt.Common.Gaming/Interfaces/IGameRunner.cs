@@ -4,5 +4,5 @@ namespace Hmt.Common.Gaming.Interfaces;
 
 public interface IGameRunner
 {
-    void RunGameSession(GameSession gameSession);
+    void RunGameSession(Game game, GameSession gameSession);
 }

@@ -6,9 +6,18 @@ namespace Hmt.Common.Gaming.ConsoleViews.GameViews;
 
 public class GameMenuTop : GameMenuBase
 {
-    public GameMenuTop() : base(new Game()) { }
+    protected GameMenuComponents _gameMenuComponents;
+    protected GameSessionMenuTop _gameSessionMenuTop;
+    protected IGameRunner _gameRunner;
 
-    public override void Show(IGameRunner gameRunner)
+    public GameMenuTop(IGameRunner gameRunner) : base(new Game())
+    {
+        _gameMenuComponents = new GameMenuComponents(_game);
+        _gameSessionMenuTop = new GameSessionMenuTop(_game, new GameSession(), gameRunner);
+        _gameRunner = gameRunner;
+    }
+
+    public override void Show()
     {
         Game? game = null;
         while (true)
@@ -39,14 +48,14 @@ public class GameMenuTop : GameMenuBase
             {
                 if (game == null)
                     continue;
-                var nextView = new GameMenuComponents(game);
+                var nextView = _gameSessionMenuTop;
                 nextView.Show();
             }
             else if (choice == 4)
             {
                 if (game == null)
                     continue;
-                var nextView = new GameSessionMenuTop(game, new GameSession(), gameRunner);
+                var nextView = _gameSessionMenuTop;
                 nextView.Show();
             }
             else if (choice == 5)
@@ -56,7 +65,7 @@ public class GameMenuTop : GameMenuBase
                 var session = LoadGameSession();
                 if (session != null)
                 {
-                    var nextView = new GameSessionMenuTop(game, session, gameRunner);
+                    var nextView = new GameSessionMenuTop(game, session, _gameRunner);
                     nextView.Show();
                 }
             }
@@ -65,7 +74,7 @@ public class GameMenuTop : GameMenuBase
         }
     }
 
-    public override void Show()
+    public override void Show(IGameRunner gameRunner)
     {
         throw new NotImplementedException();
     }

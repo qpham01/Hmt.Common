@@ -14,7 +14,7 @@ public class PieceMenuTop : ComponentMenuTop<Piece>
 
     protected override List<Piece> GetComponents(ComponentFilter? filter)
     {
-        var boards = _game.Pieces;
-        return ApplyFilter(boards, filter);
+        var pieces = _game.Pieces;
+        return ApplyFilter(pieces, filter);
     }
 }

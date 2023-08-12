@@ -3,7 +3,6 @@ using Hmt.Common.Gaming.Components;
 using Hmt.Common.Gaming.Interfaces;
 using Hmt.Common.Gaming.ConsoleViews.BoardViews;
 using Hmt.Common.Gaming.ConsoleViews.CardViews;
-using Hmt.Common.Gaming.ConsoleViews.GraphSpaceViews;
 using Hmt.Common.Gaming.ConsoleViews.PieceViews;
 using Hmt.Common.Gaming.ConsoleViews.ScenarioView;
 using Hmt.Common.Gaming.ConsoleViews.TemplateViews;
@@ -24,7 +23,6 @@ public class GameMenuComponents : GameMenuBase
                 "Save Game",
                 "Edit Boards",
                 "Edit Cards",
-                "Edit Graph Spaces",
                 "Edit Pieces",
                 "Edit Scenarios",
                 "Edit Templates"

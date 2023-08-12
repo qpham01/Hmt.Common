@@ -26,6 +26,8 @@ public class BoardMenuTop : ComponentMenuTop<Board>
             return null;
 
         var board = ParseComponentLine(input, null);
+        if (board == null)
+            return null;
         AddSpacesToBoard(board);
         return board;
     }
