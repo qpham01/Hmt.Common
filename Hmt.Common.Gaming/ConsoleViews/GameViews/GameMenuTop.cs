@@ -73,9 +73,4 @@ public class GameMenuTop : GameMenuBase
                 break;
         }
     }
-
-    public override void Show(IGameRunner gameRunner)
-    {
-        throw new NotImplementedException();
-    }
 }

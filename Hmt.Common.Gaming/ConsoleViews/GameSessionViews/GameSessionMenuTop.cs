@@ -19,9 +19,4 @@ public class GameSessionMenuTop : GameMenuBase
     {
         _gameRunner.RunGameSession(_game, _gameSession);
     }
-
-    public override void Show(IGameRunner gameRunner)
-    {
-        throw new NotImplementedException();
-    }
 }

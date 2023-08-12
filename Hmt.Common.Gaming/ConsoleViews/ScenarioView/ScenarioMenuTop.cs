@@ -12,10 +12,5 @@ namespace Hmt.Common.Gaming.ConsoleViews.ScenarioView
         {
             throw new NotImplementedException();
         }
-
-        public override void Show(IGameRunner gameRunner)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

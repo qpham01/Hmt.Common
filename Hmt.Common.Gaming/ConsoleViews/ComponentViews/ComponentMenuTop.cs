@@ -105,11 +105,6 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
         }
     }
 
-    public override void Show(IGameRunner gameRunner)
-    {
-        throw new NotImplementedException();
-    }
-
     #endregion
 
     protected virtual string? GetComponentInput(bool isNew)

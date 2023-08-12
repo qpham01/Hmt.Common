@@ -62,9 +62,4 @@ public class GameMenuComponents : GameMenuBase
                 nextView.Show();
         }
     }
-
-    public override void Show(IGameRunner gameRunner)
-    {
-        throw new NotImplementedException();
-    }
 }

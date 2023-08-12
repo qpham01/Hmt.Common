@@ -5,12 +5,10 @@ using Newtonsoft.Json;
 
 namespace Hmt.Common.Gaming.ConsoleViews.GameViews;
 
-public abstract class GameViewBase : ConsoleView, IGameView
+public abstract class GameViewBase : ConsoleView
 {
     protected static string? _currentGamePath = null;
     protected static string? _currentGameSessionPath = null;
-
-    public abstract void Show(IGameRunner gameRunner);
 
     public virtual Game? LoadGame()
     {
