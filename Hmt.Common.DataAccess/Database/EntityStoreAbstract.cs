@@ -1,5 +1,4 @@
 ﻿using Hmt.Common.DataAccess.Interfaces;
-using Marten;
 
 namespace Hmt.Common.DataAccess.Database;
 
@@ -17,20 +16,12 @@ public abstract class EntityStoreAbstract<T, TKey> : IEntityStore<T, TKey>
         _storeWrapper = storeWrapper;
     }
 
-    public virtual async Task<T> CreateAsync(T entity)
+    public virtual async Task<T> UpdateAsync(T entity)
     {
         using (var session = _storeWrapper.OpenSession())
         {
             await session.Store(entity);
-        }
-        return entity;
-    }
-
-    public virtual async Task UpdateAsync(T entity)
-    {
-        using (var session = _storeWrapper.OpenSession())
-        {
-            await session.Store(entity);
+            return entity;
         }
     }
 
