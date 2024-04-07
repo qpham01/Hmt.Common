@@ -40,7 +40,7 @@ public class BoardMenuTop : ComponentMenuTop<Board>
         ParseComponentLine(input, toEdit);
     }
 
-    private void AddSpacesToBoard(Board? board)
+    private void AddSpacesToBoard(Board board)
     {
         var spaceMenu = new GraphSpaceMenuTop(_game, board);
         spaceMenu.Show();
