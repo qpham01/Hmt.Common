@@ -3,4 +3,6 @@
 public interface IView
 {
     void Show();
+
+    Task ShowAsync();
 }

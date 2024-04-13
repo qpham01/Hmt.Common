@@ -10,4 +10,9 @@ public abstract class GameMenuBase : GameViewBase
     {
         _game = game;
     }
+
+    public override Task ShowAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

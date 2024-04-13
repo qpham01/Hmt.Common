@@ -32,6 +32,11 @@ public abstract class ComponentMenuTop<T> : GameMenuBase where T : Component, ne
 
     #region IView, IGameView
 
+    public override Task ShowAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void Show()
     {
         while (true)
